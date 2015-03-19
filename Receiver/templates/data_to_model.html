@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+<head profile="http://www.w3.org/2005/10/profile">
+    <meta charset="UTF-8">
+    <title>Установка зависимостей между моделями и получаемыми данными</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/style.css'%}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"/>
+    <script src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+    <div id="controls">
+        <h3><p>Настройки подключения</p></h3>
+        <form id="rel_form" class="form-horizontal" action="" method="post">{% csrf_token %}
+            <div class="form-group">
+                <label for="id_model_type" class="col-sm-3 control-label">Модель: </label>
+                <div class="col-sm-9">
+                    <select class="form-control" id="id_model_type", name="model_type">
+                        {% for one_model in all_models %}
+                            <option value="{{one_model}}">{{one_model}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_data_addr" class="col-sm-3 control-label">Адрес: </label>
+                <div class="col-sm-9">
+                    <input class="form-control" id="id_data_addr" name="data_addr" type="url" />
+                </div>
+            </div>
+
+            <input style="float:left; margin-top: 15px;" class="btn btn-primary" type="submit" value="Добавить зависимость">
+        </form>
+    </div>
+</body>
+</html>

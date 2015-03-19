@@ -1,0 +1,5 @@
+Варианты представления одних и тех же данных:
+/rssdata/ - RSS через syndication
+/atomdata/ - ATOM через syndication
+/jsondata/ - JSON через Rest
+/xmldata/ - XML через Rest
