@@ -34,16 +34,15 @@
         <div id="simplest info" class="col-sm-6">
 
             {% if serialized_data %}
-                <p>{{ serialized_data }}</p>
+                <p>serialized_data: {{ serialized_data }}</p>
             {% endif %}
 
             {% if contype %}
-                <p>{{ contype }}</p>
+                <p>Content-Type: {{ contype }}</p>
             {% endif %}
 
-            {% if contype %}
-                <p>{{ success }}</p>
-            {% endif %}
+            <p>success: {{ success }}</p>
+
 
         </div>
     </div>
