@@ -1,20 +1,29 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
-from Main.forms import RelationModelDataForm
-from Main.mapper import *
+from Main.forms import MapperInpForm
+from mapper.main import *
+from mapper.errors import WrongTrashField, WrongContent
 
 
 def data_to_model(request):
+    serialized_data = contype = success = ''
     if request.method == 'GET':
-        rel_form = RelationModelDataForm()
+        map_form = MapperInpForm()
     if request.method == 'POST':
-        rel_form = RelationModelDataForm(request.POST)
-        print('rel_form: %s' % rel_form)
-        if rel_form.is_valid():
-            cd = rel_form.cleaned_data
+        map_form = MapperInpForm(request.POST)
+        if map_form.is_valid():
+            cd = map_form.cleaned_data
             print('cleaned_data: %s' % cd)
-            # try:
-            #     Mapper(data_addr=cd['data_addr'], model_type=cd['model_type'])
-            # except Exception('Unsupported input data format')
+            m = Mapper(url=cd['data_addr'], trash_fields=cd['trash_fields'])
+            m.fill_model()
 
-    return render_to_response('data_to_model.html', {'all_models': MODELS_LIST}, context_instance=RequestContext(request))
+            try:
+                serialized_data = m.serialized_data
+            except (WrongTrashField, WrongContent):
+                pass
+            contype = m.contype
+            success = m.success
+
+    return render_to_response('data_to_model.html',
+                              {'serialized_data': serialized_data, 'contype': contype, 'success': success},
+                              context_instance=RequestContext(request))

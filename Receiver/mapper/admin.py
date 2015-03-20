@@ -1,3 +1,6 @@
 from django.contrib import admin
+from mapper.models import MapperStat
 
-# Register your models here.
+
+admin.site.register(MapperStat)
+

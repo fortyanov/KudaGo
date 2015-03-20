@@ -1,6 +1,6 @@
 __author__ = 'Fedor Ortyanov fortyanov@gmail.com'
 
-################## SIMPLE MAPPER MODULE #######################
+################## SIMPLE MAPPER json/xml TO MODULES #######################
 
 
 import json
@@ -30,10 +30,10 @@ class Mapper(object):
 
         elif 'xml' in self.contype:
             xmldoc = xmltodict.parse(self.data)
-            for field in self.trash_fields: xmldoc = xmldoc[field]
             try:
+                for field in self.trash_fields: xmldoc = xmldoc[field]
                 data = [dict(obj) for obj in xmldoc]
-            except (ValueError, TypeError):
+            except (ValueError, TypeError, KeyError):
                 raise WrongTrashField
 
         else:
@@ -43,23 +43,26 @@ class Mapper(object):
 
 
     def fill_model(self):
-        info = model = ser_data = ''
+        model = ser_data = ''
+        info = 'There is no comparable models for such data.'
         try:
-            ser_data = self.serialized_data
+            ser_data = self.serialized_data    # ser_data = list of dicts
         except (WrongTrashField, WrongContent) as e:
             info = e.info
         if ser_data:
-            for sd in ser_data:
+            for sd in ser_data:    # sd - dict with serialized data for one object
                 if 'id' in sd: del sd['id']
                 for m in ALL_MODELS:
                     try:
                         m.objects.create(**sd)
                         self.success = True
                         model = m.__name__
+                        info = 'The mapping operation was successful.'
                         break
                     except: pass
 
-        print('data: %s\nurl: %s\nmodel: %s\nsuccess: %s\ntrash_fields: %s\ninfo: %s' % (self.data, self.url, model, self.success, ('.'.join(self.trash_fields)), info))
+        print('data: %s\nurl: %s\nmodel: %s\nsuccess: %s\ntrash_fields: %s\ninfo: %s' %
+              (self.data, self.url, model, self.success, ('.'.join(self.trash_fields)), info))
         MapperStat.objects.create(data=self.data,
                                   url=self.url,
                                   model=model,

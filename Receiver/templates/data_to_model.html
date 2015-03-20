@@ -3,7 +3,7 @@
 <html>
 <head profile="http://www.w3.org/2005/10/profile">
     <meta charset="UTF-8">
-    <title>Установка зависимостей между моделями и получаемыми данными</title>
+    <title>Загрузка данных по указанному адресу и заполнение этими данными моделей</title>
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"/>
@@ -12,29 +12,40 @@
 </head>
 
 <body>
-    <div id="controls">
-        <h3><p>Настройки подключения</p></h3>
-        <form id="rel_form" class="form-horizontal" action="" method="post">{% csrf_token %}
-            <div class="form-group">
-                <label for="id_model_type" class="col-sm-3 control-label">Модель: </label>
-                <div class="col-sm-9">
-                    <select class="form-control" id="id_model_type", name="model_type">
-                        {% for one_model in all_models %}
-                            <option value="{{one_model}}">{{one_model}}</option>
-                        {% endfor %}
-                    </select>
+    <div class="container">
+        <div id="controls" class="col-sm-6">
+            <h3><p>Залить данные в модельки</p></h3>
+            <form id="map_form" class="form-horizontal" action="" method="post">{% csrf_token %}
+                <div class="form-group">
+                    <label for="id_data_addr" class="col-sm-3 control-label">Адрес: </label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="id_data_addr" name="data_addr" type="url" />
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="id_data_addr" class="col-sm-3 control-label">Адрес: </label>
-                <div class="col-sm-9">
-                    <input class="form-control" id="id_data_addr" name="data_addr" type="url" />
+                <div class="form-group">
+                    <label for="id_trash_fields" class="col-sm-3 control-label">Лишние поля: </label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="id_trash_fields" name="trash_fields" type="text" />
+                    </div>
                 </div>
-            </div>
+                <input style="text-align: center; margin-top: 15px;" class="btn btn-primary" type="submit" value="Залить">
+            </form>
+        </div>
+        <div id="simplest info" class="col-sm-6">
 
-            <input style="float:left; margin-top: 15px;" class="btn btn-primary" type="submit" value="Добавить зависимость">
-        </form>
+            {% if serialized_data %}
+                <p>{{ serialized_data }}</p>
+            {% endif %}
+
+            {% if contype %}
+                <p>{{ contype }}</p>
+            {% endif %}
+
+            {% if contype %}
+                <p>{{ success }}</p>
+            {% endif %}
+
+        </div>
     </div>
 </body>
 </html>
