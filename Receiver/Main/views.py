@@ -6,7 +6,7 @@ from mapper.errors import WrongTrashField, WrongContent
 
 
 def data_to_model(request):
-    serialized_data = contype = success = ''
+    data = contype = success = ''
     if request.method == 'GET':
         map_form = MapperInpForm()
     if request.method == 'POST':
@@ -18,12 +18,12 @@ def data_to_model(request):
             m.fill_model()
 
             try:
-                serialized_data = m.serialized_data
+                data = m.data
             except (WrongTrashField, WrongContent):
                 pass
             contype = m.contype
             success = m.success
 
     return render_to_response('data_to_model.html',
-                              {'serialized_data': serialized_data, 'contype': contype, 'success': success},
+                              {'data': data, 'contype': contype, 'success': success},
                               context_instance=RequestContext(request))

@@ -25,20 +25,20 @@ class MapperTestCase(TestCase):
         r2 = requests.get(url=url2)
         self.assertEqual(r1.headers['content-type'], map1.contype)
         self.assertEqual(r2.headers['content-type'], map2.contype)
-        self.assertEqual(map1.data, r1.text)
-        self.assertEqual(map2.data, r2.text)
-        self.assertIsInstance(map1.serialized_data, list, msg='serialized content is a list of dict')
-        self.assertIsInstance(map2.serialized_data, list, msg='serialized content is a list of dict')
-        for d in map1.serialized_data:
+        self.assertEqual(map1.ser_data, r1.text)
+        self.assertEqual(map2.ser_data, r2.text)
+        self.assertIsInstance(map1.data, list, msg='serialized content is a list of dict')
+        self.assertIsInstance(map2.data, list, msg='serialized content is a list of dict')
+        for d in map1.data:
             self.assertIsInstance(d, dict, msg='serialized content is a list of dict')
-        for d in map2.serialized_data:
+        for d in map2.data:
             self.assertIsInstance(d, dict, msg='serialized content is a list of dict')
         with self.assertRaises(requests.exceptions.MissingSchema):
             map1=Mapper(url='bad_url')
         with self.assertRaises(errors.WrongContent):
-            sd = Mapper(url='http://localhost:8000/notexisted/').serialized_data
+            sd = Mapper(url='http://localhost:8000/notexisted/').data
         with self.assertRaises(errors.WrongTrashField):
-            sd = Mapper(url=url1, trash_fields='root').serialized_data
+            sd = Mapper(url=url1, trash_fields='root').data
 
 
     def test_success(self):
